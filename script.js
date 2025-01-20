@@ -81,6 +81,7 @@ const GameController = (() => {
         currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
         console.log(`${currentPlayer.name}'s turn (${currentPlayer.symbol})`);
     };
+    
 
     const checkWinner = () => {
         const board = Gameboard.getBoard();
@@ -119,3 +120,11 @@ const GameController = (() => {
     
     return { setPlayers, playTurn, resetGame };
 })();
+
+// Game Initialization
+const player1 = Player("Player 1", "X");
+const player2 = Player("Player 2", "O");
+
+GameController.setPlayers(player1, player2);
+console.log("Game started. Player 1 goes first (X).\n");
+Gameboard.printBoard();
