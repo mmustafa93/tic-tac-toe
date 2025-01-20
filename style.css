@@ -1,29 +1,84 @@
 body {
     background-color: antiquewhite;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 header {
     text-align: center;
+    padding: 2rem 2rem 0.2rem 2rem;
 }
 
 main {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    padding: 0.2rem;
+}
+
+button {
+    color: cadetblue;
+    font-weight: bold;
+    font-size: 0.8rem;
+    background-color: azure;
+    border-radius: 1.2rem;
+    border: none;
 }
 
 .pre-game-setup {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
 }
+
 .pre-game-setup div {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    gap: 2rem;
 }
 
-.pre-game-setup > button {
-    margin-top: 2rem;
+.choose-player-type {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    gap: 0.5rem;
+}
+
+.winner-declaration {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 1rem;
+    background-color: white;
+    border: none;
+}
+
+.square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    border: 2px solid black;
+    cursor: pointer;
+    width: 4rem;
+    height: 4rem;
+}
+
+span {
+    font-size: 3rem;
+}
+
+.square:hover {
+    background-color: lightgray;
 }
 
 .hidden {
