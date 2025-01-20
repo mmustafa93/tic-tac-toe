@@ -1,3 +1,4 @@
+
 // Gameboard Module
 const Gameboard = (() => {
     const board = Array(3).fill(null).map(() => Array(3).fill(null));
@@ -52,6 +53,71 @@ const GameController = (() => {
         currentPlayer = player1; // Start with Player 1
     };
 
+    // DOM Elements
+    const humanPlayer1 = document.getElementById("human-player-1");
+    const computerPlayer1 = document.getElementById("computer-player-1");
+    const humanPlayer2 = document.getElementById("human-player-2");
+    const computerPlayer2 = document.getElementById("computer-player-2");
+    const startBtn = document.querySelector(".start-btn");
+    const playerTurnText = document.querySelector(".player-turn");
+    const gameBoard = document.querySelector(".game-board");
+    const winnerText = document.getElementsByClassName("winner-text");
+    const restartBtn = document.getElementsByClassName("restart-btn");
+
+    // Variables to track selected player types
+    let player1Type // Default to Human
+    let player2Type; // Default to Human
+
+    humanPlayer1.addEventListener("click", () => {
+        humanPlayer1.classList.add("selected");
+        computerPlayer1.classList.remove("selected");
+        player1Type = "Human"; // Update Player 1 type
+        console.log(player1Type);
+    });
+
+    computerPlayer1.addEventListener("click", () => {
+        humanPlayer1.classList.remove("selected");
+        computerPlayer1.classList.add("selected");
+        player1Type = "Computer"; // Update Player 1 type
+    });
+
+    humanPlayer2.addEventListener("click", () => {
+        humanPlayer2.classList.add("selected");
+        computerPlayer2.classList.remove("selected");
+        player2Type = "Human"; // Update Player 2 type
+    });
+
+    computerPlayer2.addEventListener("click", () => {
+        humanPlayer2.classList.remove("selected");
+        computerPlayer2.classList.add("selected");
+        player2Type = "Computer"; // Update Player 2 type
+    });
+
+    // Start game handler
+    const startGame = () => {
+        startBtn.addEventListener("click", () => {
+            // Create players based on selected types
+            let player1
+            let player2
+            if (player1Type && player2Type){
+                player1 = Player(player1Type, "X");
+                player2 = Player(player2Type, "O");
+            } else {
+                alert("Choose players!")
+                return
+            }
+
+            // Set players and initialize game
+            setPlayers(player1, player2);
+            
+            // Update UI to hide setup and show the game board
+            playerTurnText.classList.remove("hidden");
+            gameBoard.classList.remove("hidden");
+            startBtn.classList.add("hidden")
+            playerTurnText.textContent = `${player1.name}'s Turn (${player1.symbol})`;
+        });
+    };
+
     const playTurn = (row, col) => {
         if (isGameOver) {
           console.log("The game is over. Please reset the board to play again.");
@@ -79,6 +145,7 @@ const GameController = (() => {
 
     const switchPlayer = () => {
         currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
+        playerTurnText.textContent = `${currentPlayer.name}'s Turn (${currentPlayer.symbol})`;
         console.log(`${currentPlayer.name}'s turn (${currentPlayer.symbol})`);
     };
     
@@ -117,14 +184,11 @@ const GameController = (() => {
     console.log("Game reset. Starting a new game.");
     Gameboard.printBoard();
     };
+
     
-    return { setPlayers, playTurn, resetGame };
+    return { setPlayers, playTurn, resetGame, startGame };
 })();
 
-// Game Initialization
-const player1 = Player("Player 1", "X");
-const player2 = Player("Player 2", "O");
+const startBtn = document.querySelector(".start-btn");
 
-GameController.setPlayers(player1, player2);
-console.log("Game started. Player 1 goes first (X).\n");
-Gameboard.printBoard();
+startBtn.addEventListener('click', GameController.startGame())

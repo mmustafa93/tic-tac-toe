@@ -23,6 +23,12 @@ button {
     background-color: azure;
     border-radius: 1.2rem;
     border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: lightblue;
 }
 
 .pre-game-setup {
@@ -83,4 +89,8 @@ span {
 
 .hidden {
     display: none;
+}
+
+.selected {
+    background-color: lightblue;
 }

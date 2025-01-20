@@ -15,23 +15,23 @@
             <div>
                 <section class="choose-player-type">
                     <h3>Player 1 (X):</h3>
-                    <button>Human</button>
-                    <button>Computer</button>
+                    <button id="human-player-1">Human</button>
+                    <button id="computer-player-1">Computer</button>
                 </section>
                 <section class="choose-player-type">
                     <h3>Player 2 (O):</h3>
-                    <button>Human</button>
-                    <button>Computer</button>
+                    <button id="human-player-2">Human</button>
+                    <button id="computer-player-2">Computer</button>
                 </section>
             </div>
-            <button>Start Game</button>
+            <button class="start-btn">Start Game</button>
         </section>
-        <section class="player-turn"></section>
-        <section class="winner-declaration">
-            <h2></h2>
-            <button class="">Play Again</button>
+        <section class="player-turn hidden"></section>
+        <section class="winner-declaration hidden">
+            <h2 class="winner-text"></h2>
+            <button class="restart-btn">Play Again</button>
         </section>
-        <section class="game-board">
+        <section class="game-board hidden">
             <div class="square">
                 <span></span>
             </div>
