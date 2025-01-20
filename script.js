@@ -9,9 +9,10 @@ const Gameboard = (() => {
         }
     }
 
-    const markCell = (row, col, symbol) => {
+    const markCell = (row, col, symbol, span) => {
       if (!board[row][col].checked) {
         board[row][col] = { checked: true, value: symbol };
+        span.textContent = symbol;
         return true; // Move successful
       }
       return false; // Cell already occupied
@@ -61,7 +62,9 @@ const GameController = (() => {
     const startBtn = document.querySelector(".start-btn");
     const playerTurnText = document.querySelector(".player-turn");
     const gameBoard = document.querySelector(".game-board");
-    const winnerText = document.getElementsByClassName("winner-text");
+    const squares = document.querySelectorAll(".square");
+    const winnerDeclaration = document.querySelector(".winner-declaration");
+    const winnerText = document.querySelector(".winner-text");
     const restartBtn = document.getElementsByClassName("restart-btn");
 
     // Variables to track selected player types
@@ -97,15 +100,13 @@ const GameController = (() => {
     const startGame = () => {
         startBtn.addEventListener("click", () => {
             // Create players based on selected types
-            let player1
-            let player2
-            if (player1Type && player2Type){
-                player1 = Player(player1Type, "X");
-                player2 = Player(player2Type, "O");
-            } else {
-                alert("Choose players!")
-                return
+            if (!player1Type || !player2Type) {
+                alert("Please select both player types before starting the game!");
+                return;
             }
+
+            const player1 = Player(player1Type, "X");
+            const player2 = Player(player2Type, "O");
 
             // Set players and initialize game
             setPlayers(player1, player2);
@@ -115,31 +116,54 @@ const GameController = (() => {
             gameBoard.classList.remove("hidden");
             startBtn.classList.add("hidden")
             playerTurnText.textContent = `${player1.name}'s Turn (${player1.symbol})`;
+
+            // Add event listeners to squares
+            squares.forEach((square, index) => {
+                square.addEventListener("click", () => playTurn(square, index));
+            });
         });
     };
 
-    const playTurn = (row, col) => {
+    // Play turn handler
+    const playTurn = (square, index) => {
+        const row = Math.floor(index / 3);
+        const col = index % 3;
+
+        const span = square.querySelector("span");
+        if (span.textContent !== "") {
+            alert("This square is already taken. Please choose another.");
+            return;
+        }
+
         if (isGameOver) {
           console.log("The game is over. Please reset the board to play again.");
           return;
         }
-    
-        const moveSuccessful = Gameboard.markCell(row, col, currentPlayer.symbol);
+        
+        const moveSuccessful = Gameboard.markCell(row, col, currentPlayer.symbol, span);
+        
         if (moveSuccessful) {
           Gameboard.printBoard();
           if (checkWinner()) {
+            playerTurnText.classList.add("hidden");
+            winnerDeclaration.classList.remove("hidden");
+            console.log(winnerText)
+            winnerText.textContent = `${currentPlayer.name} wins!`;
             console.log(`${currentPlayer.name} wins!`);
             isGameOver = true;
             return;
           }
           if (checkTie()) {
+            playerTurnText.classList.add("hidden");
+            winnerDeclaration.classList.remove("hidden");
+            winnerText.textContent = "It's a tie!";
             console.log("It's a tie!");
             isGameOver = true;
             return;
           }
           switchPlayer();
         } else {
-          console.log("Cell is already occupied. Try a different move.");
+          alert("Cell is already occupied. Try a different move.");
         }
     };
 
