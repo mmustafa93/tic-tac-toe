@@ -1,3 +1,7 @@
+const startBtn = document.querySelector(".start-btn");
+const playerTurnText = document.querySelector(".player-turn");
+const winnerDeclaration = document.querySelector(".winner-declaration");
+
 
 // Gameboard Module
 const Gameboard = (() => {
@@ -20,7 +24,17 @@ const Gameboard = (() => {
   
     const getBoard = () => board; // to ensure encapsulation
   
-    const resetBoard = () => {
+    const resetBoard = (squares) => {
+        console.log(squares);
+        squares.forEach(square => {
+            const span = square.querySelector("span"); // Select the span inside each square
+            console.log(span);
+            if (span) {
+                span.textContent = ""; // Clear the content of the span
+            }
+        });
+        playerTurnText.classList.remove("hidden");
+        winnerDeclaration.classList.add("hidden"); 
       for (let row = 0; row < 3; row++) {
         for (let col = 0; col < 3; col++) {
           board[row][col] = { checked: false, value: null };
@@ -151,6 +165,7 @@ const GameController = (() => {
             winnerText.textContent = `${currentPlayer.name} wins!`;
             console.log(`${currentPlayer.name} wins!`);
             isGameOver = true;
+            restartBtn[0].addEventListener("click", () => resetGame(squares));
             return;
           }
           if (checkTie()) {
@@ -159,6 +174,7 @@ const GameController = (() => {
             winnerText.textContent = "It's a tie!";
             console.log("It's a tie!");
             isGameOver = true;
+            restartBtn[0].addEventListener("click", () => resetGame(squares));
             return;
           }
           switchPlayer();
@@ -167,9 +183,32 @@ const GameController = (() => {
         }
     };
 
+    const computerPlay = () => {
+        const board = Gameboard.getBoard();
+        const availableMoves = [];
+        board.forEach((row, rowIndex) => {
+          row.forEach((cell, colIndex) => {
+            if (!cell.checked) {
+              availableMoves.push({ rowIndex, colIndex });
+            }
+          });
+        });
+        
+        const randomMove = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+        const square = squares[randomMove.rowIndex * 3 + randomMove.colIndex];
+        
+        // Add a delay before executing the move
+        setTimeout(() => {
+            playTurn(square, randomMove.rowIndex * 3 + randomMove.colIndex);
+        }, 800);
+    }
+
     const switchPlayer = () => {
         currentPlayer = currentPlayer === players[0] ? players[1] : players[0];
         playerTurnText.textContent = `${currentPlayer.name}'s Turn (${currentPlayer.symbol})`;
+        if (currentPlayer.name === "Computer") {
+            computerPlay();
+        }
         console.log(`${currentPlayer.name}'s turn (${currentPlayer.symbol})`);
     };
     
@@ -201,18 +240,16 @@ const GameController = (() => {
         return board.flat().every(cell => cell.checked);
       };
     
-    const resetGame = () => {
-    Gameboard.resetBoard();
+    const resetGame = (squares) => {
+    console.log("Game reset. Starting a new game.");
+    Gameboard.resetBoard(squares);
     isGameOver = false;
     currentPlayer = players[0];
-    console.log("Game reset. Starting a new game.");
     Gameboard.printBoard();
     };
-
     
     return { setPlayers, playTurn, resetGame, startGame };
 })();
 
-const startBtn = document.querySelector(".start-btn");
 
-startBtn.addEventListener('click', GameController.startGame())
+startBtn.addEventListener('click', GameController.startGame());
